@@ -3,6 +3,7 @@
 
 from ps1_partition import get_partitions
 import time
+import operator
 
 #================================
 # Part A: Transporting Space Cows
@@ -55,7 +56,29 @@ def greedy_cow_transport(cows,limit=10):
     trips
     """
     # TODO: Your code here
-    pass
+
+    sorted_x = sorted(cows.items(), key=operator.itemgetter(1), reverse=True)
+
+    cows_to_space = []
+    cows_used = []
+    cows_left = len(cows)
+
+    while cows_left > 0:
+        batch = []
+        batch_weight = 0
+        for i in range(len(sorted_x)):
+            name = sorted_x[i][0]
+            weight = sorted_x[i][1]
+            if (batch_weight + weight <= limit) & (name not in cows_used):
+                batch.append(name)
+                batch_weight += weight
+                cows_left -= 1
+                cows_used.append(name)
+
+        cows_to_space.append(batch)
+
+    return cows_to_space
+
 
 
 # Problem 2
@@ -80,7 +103,17 @@ def brute_force_cow_transport(cows,limit=10):
     trips
     """
     # TODO: Your code here
-    pass
+    best_trip = (float("inf"), [])
+    for partition in get_partitions(cows.keys()):
+        max_partition_weight = 0
+
+        for batch in partition:
+            max_partition_weight = max(sum([cows[x] for x in batch]), max_partition_weight)
+
+        if (max_partition_weight <= limit) & (len(partition) <= best_trip[0]):
+            best_trip = len(partition), partition
+
+    return best_trip[1]
 
         
 # Problem 3
@@ -98,7 +131,17 @@ def compare_cow_transport_algorithms():
     Does not return anything.
     """
     # TODO: Your code here
-    pass
+    cows = load_cows("ps1_cow_data.txt")
+    start = time.time()
+    print("Greedy: " + str(len(greedy_cow_transport(cows))))
+    end = time.time()
+    print(end - start)
+    start = time.time()
+    print("Brute Force: " + str(len(brute_force_cow_transport(cows))))
+    end = time.time()
+    print(end - start)
+
+
 
 
 """
@@ -108,10 +151,11 @@ lines to print the result of your problem.
 """
 
 cows = load_cows("ps1_cow_data.txt")
-limit=100
+limit=10
 print(cows)
 
 print(greedy_cow_transport(cows, limit))
 print(brute_force_cow_transport(cows, limit))
+compare_cow_transport_algorithms()
 
 
