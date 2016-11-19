@@ -3,6 +3,7 @@ Return standard deviation of a list of lengths of strings
 '''
 
 import math
+from matplotlib import pylab
 
 def stdDevOfLengths(L):
     string_lengths = [len(s) for s in L]
@@ -20,3 +21,5 @@ def stdDevOfLengths(L):
 
 print(stdDevOfLengths(['apples', 'oranges', 'kiwis', 'pineapples']))
 
+pylab.plot([1,2,3],[1,2,3])
+pylab.show()
