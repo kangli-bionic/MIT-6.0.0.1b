@@ -114,7 +114,7 @@ class RectangularRoom(object):
 
         returns: an integer
         """
-        return sum(sum(self.tiles))
+        return np.sum(np.sum(self.tiles))
 
     def getRandomPosition(self):
         """
